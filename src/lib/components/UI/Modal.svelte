@@ -14,7 +14,7 @@
 	bind:this={dialog}
 	on:close={() => (showModal = false)}
 	on:click|self={() => dialog.close()}
-	class="bg-dark-gray text-white w-5/6 overflow-hidden"
+	class="bg-dark-gray text-white w-5/6"
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click|stopPropagation>
