@@ -25,6 +25,7 @@
 
 	/** @type {string} */
 	let searchQuery = '';
+	let timer;
 
 	/** @type {SearchResults | null} */
 	let searchResults = null;
@@ -123,6 +124,13 @@
 
 	const getSearch = async () => {
 		const q = encodeURIComponent(searchQuery);
+
+		// Reset searchResults to null if the search input is empty
+		if (!q) {
+			searchResults = null;
+			return;
+		}
+
 		const searchType = encodeURIComponent('album,artist,playlist,track');
 		const newSearchResults = await callWithRetry(
 			`https://api.spotify.com/v1/search?q=${q}&type=${searchType}`
@@ -185,6 +193,14 @@
 			unfinishedTracks = data.tracks;
 		});
 	};
+
+	const debounce = (v) => {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			searchQuery = v;
+			getSearch();
+		}, 750);
+	};
 </script>
 
 {#await $accessToken}
@@ -193,7 +209,7 @@
 	{#if token}
 		<div class="p-5 mb-16">
 			<!-- The user is authorized, you can make API calls here -->
-			<nav class="flex justify-between">
+			<nav class="flex justify-between items-center">
 				<h2 class="font-bold text-xl capitalize">Welcome, {$userData?.username}</h2>
 				<span class="flex items-center gap-2">
 					<Icon icon="fluent-emoji:gem-stone" class="text-blue-400" height="32" />
@@ -204,35 +220,28 @@
 				class="w-full rounded p-2 mt-10 mb-2 bg-gray-700 border-2 border-gray-600 text-white"
 				placeholder="Search for a track..."
 				type="text"
-				bind:value={searchQuery}
+				on:keyup={({ target: { value } }) => debounce(value)}
 			/>
-			<form on:submit|preventDefault={getSearch}>
-				<input
-					type="submit"
-					value="Zoeken"
-					class="bg-blue-400 w-full text-white font-semibold py-2 px-4 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 transition duration-300 ease-in-out border-b-4 border-blue-500"
-				/>
-			</form>
 
-			{#if unfinishedTracks && unfinishedTracks.length > 0}
-				<TrackSearchResult results={unfinishedTracks} title="Get 3 stars!" />
-			{/if}
-
-			<PlaylistResult results={userPlaylists} title="Your Playlists" />
-
-			{#if !searchResults}
-				<div transition:slide>
-					<ArtistSearchResult results={topUserArtists} title="Favorite Artists" />
-					<TrackSearchResult results={topUserTracks} title="Favorite Tracks" />
-				</div>
-			{/if}
 			{#if searchResults}
 				<div transition:slide>
-					<ArtistSearchResult results={searchResults.artists.items} title="Artists" />
-					<TrackSearchResult results={searchResults.tracks.items} title="Tracks" />
+					<h2 class="mt-2 font-bold text-2xl">Searchresults for: {searchQuery}</h2>
+					<ArtistSearchResult results={searchResults?.artists.items} title="Artists" />
+					<TrackSearchResult results={searchResults?.tracks.items} title="Tracks" />
 					<!-- <SearchResult type="album" results={searchResults.album} /> -->
 					<!-- <SearchResult type="playlist" results={searchResults.playlist} /> -->
 					<!-- <SearchResult type="track" results={searchResults.track} /> -->
+				</div>
+			{:else}
+				{#if unfinishedTracks && unfinishedTracks.length > 0}
+					<TrackSearchResult results={unfinishedTracks} title="Get 3 stars!" />
+				{/if}
+
+				<PlaylistResult results={userPlaylists} title="Your Playlists" />
+
+				<div transition:slide>
+					<ArtistSearchResult results={topUserArtists} title="Favorite Artists" />
+					<TrackSearchResult results={topUserTracks} title="Favorite Tracks" />
 				</div>
 			{/if}
 		</div>

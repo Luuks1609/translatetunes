@@ -35,7 +35,7 @@ function userStore() {
 
 	const { subscribe } = writable(auth?.currentUser ?? null, (set) => {
 		unsubscribe = onAuthStateChanged(auth, (user) => {
-			set(user);
+			set({ ...user, loading: false });
 		});
 
 		return () => unsubscribe();

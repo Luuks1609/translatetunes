@@ -112,6 +112,10 @@
 </script>
 
 <div class="p-5 mb-20">
+	<nav class="flex justify-between mb-5">
+		<h2 class="font-bold text-xl capitalize">Friends</h2>
+	</nav>
+
 	<input
 		class="w-full rounded p-2 mt-10 mb-2 bg-gray-700 border-2 border-gray-600 text-white"
 		placeholder="Search for a user"

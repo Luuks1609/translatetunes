@@ -5,8 +5,9 @@
 
 	$user;
 	$userData;
+	let loading = true;
 </script>
 
-<AuthCheck>
+<AuthCheck {loading}>
 	<slot />
 </AuthCheck>

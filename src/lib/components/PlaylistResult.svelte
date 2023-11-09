@@ -1,9 +1,9 @@
 <script>
-	export let results = null;
+	export let results = [];
 	export let title;
 </script>
 
-{#if results}
+{#if results.length > 0}
 	<h2 class="my-2 mt-10 font-bold text-2xl">{title}</h2>
 
 	<div class="grid grid-cols-2 gap-2">

@@ -1,24 +1,29 @@
 <script>
 	import { auth, user } from '$lib/firebase.js';
+	import { translateFirebaseError } from '$lib/utils.js';
 	import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
 	export let data;
 
 	let email = '';
 	let password = '';
+	let errorMessage = ''; // New variable to store error messages
 
 	async function login() {
 		try {
-			const user = await signInWithEmailAndPassword(auth, email, password).then((user) => {
+			const userCredential = await signInWithEmailAndPassword(auth, email, password);
+			if (userCredential && userCredential.user) {
 				window.location.href = '/';
-			});
+			}
 		} catch (error) {
+			errorMessage = translateFirebaseError(error); // Translate Firebase error
+
 			console.error(error);
 		}
 	}
 </script>
 
-{#if $user}
+{#if $user && $user.uid}
 	<div class="p-10">
 		<p class="text-center text-xl font-semibold mb-10">You are logged in</p>
 		<button
@@ -29,6 +34,9 @@
 {:else}
 	<div class="p-10 rounded-lg bg-dark-gray border-gray-700">
 		<h2 class="text-center text-xl font-semibold mb-10">Inloggen</h2>
+		{#if errorMessage}
+			<p class="text-red-500 text-sm mb-5">{errorMessage}</p>
+		{/if}
 		<input
 			type="text"
 			class="w-full rounded p-2 mb-5 bg-gray-700 border-2 border-gray-600 text-white"

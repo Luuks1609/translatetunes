@@ -134,3 +134,41 @@ export function extractGoodSentences(lyrics, minLen, maxRepetitive) {
 
 	return filteredSentences;
 }
+
+// Function to fetch Spotify songs by track IDs
+export async function fetchSpotifySongs(trackIds) {
+	// Create an array to store the Spotify songs
+	const spotifySongs = [];
+
+	// Loop through the trackIds and fetch Spotify song details for each trackId
+	for (const trackId of trackIds) {
+		// Create the Spotify API endpoint for fetching a song by its ID
+		const endpoint = `https://api.spotify.com/v1/tracks/${trackId}`;
+
+		// Call the Spotify API to fetch song details
+		const songData = await callWithRetry(endpoint);
+
+		// If the API call was successful, add the song data to the array
+		if (songData) {
+			spotifySongs.push(songData);
+		}
+	}
+
+	return spotifySongs;
+}
+
+// Helper method to translate Firebase errors
+export function translateFirebaseError(error) {
+	const errorCode = error.code;
+	switch (errorCode) {
+		case 'auth/invalid-email':
+			return 'Invalid email address';
+		case 'auth/user-not-found':
+			return 'User not found';
+		case 'auth/wrong-password':
+			return 'Incorrect password';
+		// Add more cases as needed
+		default:
+			return 'An error occurred';
+	}
+}

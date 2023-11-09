@@ -79,7 +79,6 @@
 			<TrackSearchResult results={data?.getTopTracks.tracks} title="Popular Tracks" />
 			<AlbumSearchResult results={data?.getAlbums.items} title="Albums" />
 			<ArtistSearchResult results={data?.getRelatedArtists.artists} title="Related Artists" />
-			<!-- Todo: album SearchResults, squares. -->
 		</div>
 	</div>
 {:catch error}

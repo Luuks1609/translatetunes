@@ -4,6 +4,7 @@
 	import { signOut } from 'firebase/auth';
 	import Modal from './Modal.svelte';
 	import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+	import { goto } from '$app/navigation';
 
 	export let username;
 	export let email;
@@ -126,7 +127,7 @@
 					<button
 						class="bg-blue-400 flex justify-center text-white font-semibold py-2 px-4 mt-10 w-1/3 rounded-md shadow-md transition duration-300 ease-in-out border-b-4 border-blue-500"
 						on:click={() => {
-							signOut(auth);
+							signOut(auth).then(() => goto('/'));
 						}}><Icon icon="bi:box-arrow-in-left" class="text-white" height={32} /></button
 					>
 				</div>
