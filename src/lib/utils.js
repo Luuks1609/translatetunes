@@ -167,6 +167,8 @@ export function translateFirebaseError(error) {
 			return 'User not found';
 		case 'auth/wrong-password':
 			return 'Incorrect password';
+		case 'auth/invalid-login-credentials':
+			return 'Invalid login credentials';
 		// Add more cases as needed
 		default:
 			return 'An error occurred';

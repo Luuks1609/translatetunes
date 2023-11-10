@@ -8,6 +8,10 @@
 	let loading = true;
 </script>
 
-<AuthCheck {loading}>
-	<slot />
-</AuthCheck>
+<div class="flex justify-center">
+	<div class="max-w-[1200px] w-full">
+		<AuthCheck {loading}>
+			<slot />
+		</AuthCheck>
+	</div>
+</div>

@@ -1,12 +1,8 @@
 <script>
-	import { db, user } from '$lib/firebase'; // Import your Firebase related code
-	import { doc, updateDoc } from 'firebase/firestore';
-
 	export let title; // Challenge title
 	export let description; // Challenge description
 	export let target; // Target value (e.g., "10 lessons")
 	export let progress; // Current progress (e.g., "3 of 10")
-	export let reward; // Reward for completing the challenge
 
 	// Calculate the percentage of completion
 	$: completionPercentage = (parseInt(progress) / parseInt(target)) * 100;
@@ -14,7 +10,7 @@
 </script>
 
 <div
-	class="bg-dark-gray font-semibold my-3 py-2 px-4 w-full rounded-md border-b-4 border-2 border-gray-700 {finished &&
+	class="bg-dark-gray font-semibold min-h-[9em] my-3 py-2 px-4 w-full rounded-md border-b-4 border-2 border-gray-700 {finished &&
 		'bg-yellow-500'}"
 >
 	<h3 class="text-xl font-semibold">{title}</h3>
