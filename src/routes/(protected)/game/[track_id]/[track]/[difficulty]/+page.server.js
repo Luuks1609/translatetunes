@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { parseJsonpResponse } from '$lib/utils';
+import { error } from '@sveltejs/kit';
 
 // Function to fetch data from the API
 const fetchData = async (/** @type {string} */ track, /** @type {string} */ artist) => {
@@ -29,6 +30,12 @@ export async function load({ params }) {
 
 	// Fetch data from the API
 	const trackData = await fetchData(track, artist);
+
+	if (!trackData) {
+		throw error(404, {
+			message: 'No lyrics found for this track'
+		});
+	}
 
 	return {
 		props: {

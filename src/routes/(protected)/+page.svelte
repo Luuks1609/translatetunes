@@ -7,12 +7,13 @@
 	import { accessToken, refreshToken } from '$lib/stores/authStore';
 	import { callWithRetry } from '$lib/utils';
 	import { onMount } from 'svelte';
-	import { slide } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import { db, userData, user as fbUser } from '$lib/firebase';
 	import Icon from '@iconify/svelte';
 	import Navigation from '$lib/components/UI/Navigation.svelte';
 	import { spotifyUser } from '$lib/stores/spotifyStore';
 	import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+	import LogoComponent from '$lib/components/LogoComponent.svelte';
 
 	/**
 	 * @typedef {Object} SearchResultItem
@@ -234,10 +235,13 @@
 				</div>
 			{:else}
 				{#if unfinishedTracks && unfinishedTracks.length > 0}
-					<TrackSearchResult results={unfinishedTracks} title="Get 3 stars!" />
+					<div transition:slide>
+						<TrackSearchResult results={unfinishedTracks} title="Get 3 stars!" />
+					</div>
 				{/if}
-
-				<PlaylistResult results={userPlaylists} title="Your Playlists" />
+				<div transition:slide>
+					<PlaylistResult results={userPlaylists} title="Your Playlists" />
+				</div>
 
 				<div transition:slide>
 					<ArtistSearchResult results={topUserArtists} title="Favorite Artists" />
@@ -247,7 +251,18 @@
 		</div>
 		<Navigation />
 	{:else}
-		<button on:click={authorizeSpotify}>Authorize with Spotify</button>
+		<div class="w-full flex justify-center items-center min-h-screen">
+			<div class="flex flex-col items-center px-5 max-w-lg mb-64">
+				<LogoComponent />
+
+				<p class="mb-3 text-gray-400">To use TranslateTunes, you must authorize spotify.</p>
+				<button
+					class="bg-green-500 text-white flex items-center justify-center gap-3 font-semibold py-5 w-full rounded-md shadow-md transition duration-300 ease-in-out border-b-4 border-green-700"
+					on:click={authorizeSpotify}
+					><Icon icon="bi:spotify" height="24" /> Authorize with Spotify</button
+				>
+			</div>
+		</div>
 	{/if}
 {:catch error}
 	<p>Error: {error.message}</p>

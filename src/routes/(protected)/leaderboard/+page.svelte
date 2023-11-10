@@ -39,7 +39,6 @@
 		</nav>
 
 		{#if data.length === 0}
-			<!-- Display a skeleton layout while loading -->
 			<LoadingSpinner />
 		{:else}
 			{#each data as player, i}

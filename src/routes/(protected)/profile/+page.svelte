@@ -6,9 +6,10 @@
 	import { spotifyUser } from '$lib/stores/spotifyStore';
 	import { callWithRetry, fetchSpotifySongs } from '$lib/utils';
 	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 	import { collection, query, where, getDocs } from 'firebase/firestore';
 	import Challenge from '$lib/components/Challenge.svelte';
+	import LoadingSpinner from '$lib/components/UI/LoadingSpinner.svelte';
 
 	let isLoading = true; // Initialize as true to show the loader.
 	let totalStars = 0;
@@ -60,7 +61,7 @@
 	});
 </script>
 
-<div class="mb-16 p-5" in:fade>
+<div class="mb-16 p-5">
 	<UserProfile
 		username={$spotifyUser?.display_name}
 		email={$spotifyUser?.email}
@@ -69,7 +70,6 @@
 		stranger={false}
 		followers={$userData?.followers}
 		following={$userData?.following}
-		{isLoading}
 	/>
 	<div class="flex gap-3 my-8">
 		<ProfileStatistic
@@ -77,35 +77,45 @@
 			color="text-yellow-400"
 			statistic={totalStars}
 			title="Stars Acquired"
-			{isLoading}
 		/>
 		<ProfileStatistic
 			icon="fluent-emoji:gem-stone"
 			color="text-blue-400"
 			statistic={$userData?.score}
 			title="Diamonds earned"
-			{isLoading}
+		/>
+		<ProfileStatistic
+			icon="bi:music-note"
+			color="text-pink-400"
+			statistic={playedSongs}
+			title="Tunes played"
 		/>
 	</div>
 
-	<Challenge
-		title="Star Collector"
-		description="Acquire 50 stars"
-		target="11 stars"
-		progress={totalStars}
-	/>
-	<Challenge
-		title="Diamond Specialist"
-		description="Collect 1000 diamonds"
-		target="1000 diamonds"
-		progress={$userData?.score}
-	/>
-	<Challenge
-		title="Music Lover"
-		description="Play 50 songs"
-		target="50 songs"
-		progress={playedSongs}
-	/>
+	{#if isLoading}
+		<LoadingSpinner />
+	{:else}
+		<div transition:fade>
+			<Challenge
+				title="Star Collector"
+				description="Acquire 50 stars"
+				target="11 stars"
+				progress={totalStars}
+			/>
+			<Challenge
+				title="Diamond Specialist"
+				description="Collect 1000 diamonds"
+				target="1000 diamonds"
+				progress={$userData?.score}
+			/>
+			<Challenge
+				title="Music Lover"
+				description="Play 50 songs"
+				target="50 songs"
+				progress={playedSongs}
+			/>
+		</div>
+	{/if}
 </div>
 
 <Navigation />
