@@ -33,7 +33,7 @@
 	</div>
 {:else}
 	<div class="p-10 rounded-lg bg-dark-gray border-gray-700">
-		<h2 class="text-center text-xl font-semibold mb-10">Inloggen</h2>
+		<h2 class="text-center text-xl font-semibold mb-10">Log in</h2>
 		{#if errorMessage}
 			<p class="text-red-500 text-sm mb-5">{errorMessage}</p>
 		{/if}
@@ -46,13 +46,13 @@
 		<input
 			type="password"
 			class="w-full rounded p-2 mb-5 bg-gray-700 border-2 border-gray-600 text-white"
-			placeholder="wachtwoord"
+			placeholder="password"
 			bind:value={password}
 		/>
 
 		<button
 			class="bg-green-500 text-white font-semibold py-2 px-4 w-full rounded-md shadow-md transition duration-300 ease-in-out border-b-4 border-green-700"
-			on:click={login}>Inloggen</button
+			on:click={login}>Log in</button
 		>
 	</div>
 {/if}
